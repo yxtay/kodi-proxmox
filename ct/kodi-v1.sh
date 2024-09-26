@@ -2,7 +2,7 @@
 
 echo -e "Loading..."
 APP="kodi"
-var_disk="8"
+var_disk="16"
 var_cpu="2"
 var_ram="2048"
 var_os="debian"

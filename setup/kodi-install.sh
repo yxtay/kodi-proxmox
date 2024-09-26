@@ -104,7 +104,7 @@ msg_ok "Installed lightdm"
 
 msg_info "Installing kodi"
 apt-get update &>/dev/null
-apt-get install -y flatpak
+DEBIAN_FRONTEND=noninteractive apt-get install -y flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install -y --non-interactive flathub tv.kodi.Kodi
 msg_ok "Installed kodi"

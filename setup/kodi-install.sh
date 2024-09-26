@@ -106,7 +106,7 @@ msg_info "Installing kodi"
 apt-get update &>/dev/null
 apt-get install -y flatpak &>/dev/null
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install -y --noninteractive flathub tv.kodi.Kodi
+flatpak install -y --noninteractive flathub tv.kodi.Kodi &>/dev/null
 msg_ok "Installed kodi"
 
 msg_info "Updating xsession"

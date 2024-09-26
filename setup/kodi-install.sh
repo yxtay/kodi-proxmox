@@ -104,12 +104,9 @@ msg_ok "Installed lightdm"
 
 msg_info "Installing kodi"
 apt-get update &>/dev/null
-apt-get install -y kodi &>/dev/null
-set +e
-alias die=''
-apt-get install --ignore-missing -y kodi-peripheral-joystick &>/dev/null
-alias die='EXIT=$? LINE=$LINENO error_exit'
-set -e
+apt-get install flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install -y --non-interactive flathub tv.kodi.Kodi
 msg_ok "Installed kodi"
 
 msg_info "Updating xsession"
@@ -117,8 +114,8 @@ cat <<EOF >/usr/share/xsessions/kodi-alsa.desktop
 [Desktop Entry]
 Name=Kodi-alsa
 Comment=This session will start Kodi media center with alsa support
-Exec=env AE_SINK=ALSA kodi-standalone
-TryExec=env AE_SINK=ALSA kodi-standalone
+Exec=flatpak run --env=AE_SINK=ALSA tv.kodi.Kodi --standalone
+TryExec=flatpak run --env=AE_SINK=ALSA tv.kodi.Kodi --standalone
 Type=Application
 EOF
 msg_ok "Updated xsession"

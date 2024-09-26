@@ -5,8 +5,8 @@ APP="kodi"
 var_disk="8"
 var_cpu="2"
 var_ram="2048"
-var_os="ubuntu"
-var_version="22.04"
+var_os="debian"
+var_version="12"
 NSAPP=$(echo ${APP,,} | tr -d ' ')
 var_install="${NSAPP}-install"
 NEXTID=$(pvesh get /cluster/nextid)
@@ -93,12 +93,6 @@ function default_settings() {
 		echo -e "${BL}Creating a ${APP} LXC using the above default settings${CL}"
 }
 function advanced_settings() {
-var_version=$(whiptail --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 3 \
-"20.04" "Focal" OFF \
-"22.04" "Jammy" ON \
-3>&1 1>&2 2>&3)
-exitstatus=$?
-if [ $exitstatus = 0 ]; then echo -e "${DGN}Using Ubuntu Version: ${BGN}$var_version${CL}"; fi
 CT_TYPE=$(whiptail --title "CONTAINER TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 8 58 2 \
 "1" "Unprivileged" ON \
 "0" "Privileged" OFF \
@@ -269,11 +263,13 @@ lxc.mount.entry: /dev/snd dev/snd none bind,optional,create=dir
 EOF
 if [ "$CT_TYPE" == "1" ]; then
     cat <<EOF >> $LXC_CONFIG
-lxc.idmap: u 0 100000 65536
+lxc.idmap: u 0 100000 1000
+lxc.idmap: u 1000 1000 1
+lxc.idmap: u 1001 101001 64535
 EOF
     #TODO internalize code to generate mapping instad of using external python script
     LXC_SUB_CONF=$(python3 -c "$(wget -qLO - https://raw.githubusercontent.com/ddimick/proxmox-lxc-idmapper/master/run.py)" \
-      ${VIDEO_GID}=$(getent group video | cut -d: -f3) ${RENDER_GID}=$(getent group render | cut -d: -f3) ${TTY_GID}=$(getent group tty | cut -d: -f3) ${INPUT_GID}=$(getent group input | cut -d: -f3) ${AUDIO_GID}=$(getent group audio | cut -d: -f3)) 
+      ${VIDEO_GID}=$(getent group video | cut -d: -f3) ${RENDER_GID}=$(getent group render | cut -d: -f3) ${TTY_GID}=$(getent group tty | cut -d: -f3) ${INPUT_GID}=$(getent group input | cut -d: -f3) ${AUDIO_GID}=$(getent group audio | cut -d: -f3) 1000:1000) 
     echo "$LXC_SUB_CONF" | grep 'lxc.idmap: g ' >> $LXC_CONFIG
     # on host add rights to map gids but only if they are not already in the file
     echo "$LXC_SUB_CONF" | sed -n '/subgid/,// { /subgid/! p }' | while read line; do cat /etc/subgid | sed 's/[[:blank:]]*//g' | grep -qxF "$line" || echo $line >> /etc/subgid; done
@@ -304,7 +300,7 @@ msg_info "Starting LXC Container"
 pct start $CTID
 msg_ok "Started LXC Container"
 
-lxc-attach -n $CTID -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/mrrudy/proxmoxHelper/main/setup/$var_install.sh)" || exit
+lxc-attach -n $CTID -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/yxtay/kodi-proxmoxHelper/main/setup/$var_install.sh)" || exit
 IP=$(pct exec $CTID ip a s dev eth0 | sed -n '/inet / s/\// /p' | awk '{print $2}')
 pct set $CTID -description "# ${APP} LXC"
 msg_ok "Completed Successfully!\n"

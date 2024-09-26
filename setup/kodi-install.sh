@@ -79,12 +79,7 @@ msg_info "Setting Up Hardware Acceleration"
 apt-get -y install \
     va-driver-all \
     ocl-icd-libopencl1 &>/dev/null 
-set +e
-alias die=''
 apt-get install --ignore-missing -y beignet-opencl-icd &>/dev/null
-alias die='EXIT=$? LINE=$LINENO error_exit'
-set -e
-    
 msg_ok "Set Up Hardware Acceleration"  
 
 msg_info "Setting Up kodi user"

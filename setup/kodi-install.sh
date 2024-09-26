@@ -121,6 +121,7 @@ EOF
 msg_ok "Updated xsession"
 
 msg_info "Setting up autologin"
+mkdir -p /etc/lightdm/lightdm.conf.d
 cat <<EOF >/etc/lightdm/lightdm.conf.d/autologin-kodi.conf
 [Seat:*]
 autologin-user=kodi
@@ -131,7 +132,7 @@ msg_ok "Set up autologin"
 msg_info "Setting up device detection for xorg"
 apt-get install -y xserver-xorg-input-evdev &>/dev/null
 #following script needs to be executed before Xorg starts to enumerate all input devices
-/bin/mkdir -p /etc/X11/xorg.conf.d
+mkdir -p /etc/X11/xorg.conf.d
 cat >/usr/local/bin/preX-populate-input.sh  << __EOF__
 #!/usr/bin/env bash
 
@@ -158,8 +159,8 @@ EndSection
 _EOF_
 done
 __EOF__
-/bin/chmod +x /usr/local/bin/preX-populate-input.sh
-/bin/mkdir -p /etc/systemd/system/lightdm.service.d
+chmod +x /usr/local/bin/preX-populate-input.sh
+mkdir -p /etc/systemd/system/lightdm.service.d
 cat > /etc/systemd/system/lightdm.service.d/override.conf << __EOF__
 [Service]
 ExecStartPre=/bin/sh -c '/usr/local/bin/preX-populate-input.sh'

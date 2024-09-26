@@ -6,7 +6,7 @@ var_disk="16"
 var_cpu="2"
 var_ram="2048"
 var_os="ubuntu"
-var_version="24.04"
+var_version="22.04"
 NSAPP=$(echo ${APP,,} | tr -d ' ')
 var_install="${NSAPP}-install"
 NEXTID=$(pvesh get /cluster/nextid)
@@ -94,8 +94,8 @@ function default_settings() {
 }
 function advanced_settings() {
 var_version=$(whiptail --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 3 \
-"22.04" "Jammy" OFF \
-"24.04" "Noble" ON \
+"22.04" "Jammy" ON \
+"24.04" "Noble" OFF \
 3>&1 1>&2 2>&3)
 exitstatus=$?
 if [ $exitstatus = 0 ]; then echo -e "${DGN}Using Ubuntu Version: ${BGN}$var_version${CL}"; fi

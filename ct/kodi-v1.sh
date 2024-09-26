@@ -94,7 +94,7 @@ function default_settings() {
 }
 function advanced_settings() {
 var_version=$(whiptail --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 3 \
-"22.04" "Jammy" OF \
+"22.04" "Jammy" OFF \
 "24.04" "Noble" ON \
 3>&1 1>&2 2>&3)
 exitstatus=$?

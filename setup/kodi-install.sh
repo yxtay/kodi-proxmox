@@ -75,7 +75,7 @@ apt-get install -y sudo &>/dev/null
 apt-get install -y gnupg &>/dev/null
 msg_ok "Installed Dependencies"
 
-msg_info "Setting Up Hardware Acceleration"  
+# msg_info "Setting Up Hardware Acceleration"  
 # apt-get -y install \
 #     va-driver-all \
 #     ocl-icd-libopencl1 &>/dev/null 
@@ -84,7 +84,7 @@ msg_info "Setting Up Hardware Acceleration"
 # apt-get install --ignore-missing -y beignet-opencl-icd &>/dev/null
 # alias die='EXIT=$? LINE=$LINENO error_exit'
 # set -e
-msg_ok "Set Up Hardware Acceleration"  
+# msg_ok "Set Up Hardware Acceleration"  
 
 msg_info "Setting Up kodi user"
 useradd -d /home/kodi -m kodi &>/dev/null
@@ -172,7 +172,6 @@ PASS=$(grep -w "root" /etc/shadow | cut -b6);
   if [[ $PASS != $ ]]; then
 msg_info "Customizing Container"
 chmod -x /etc/update-motd.d/*
-touch ~/.hushlogin
 GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
 mkdir -p $(dirname $GETTY_OVERRIDE)
 cat << EOF > $GETTY_OVERRIDE
